@@ -6,6 +6,7 @@
 #include <thread>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 
 #include <SFML/Graphics.hpp>
 
@@ -288,23 +289,86 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return CallWindowProc(reinterpret_cast<WNDPROC>(sfml_window_proc), hwnd, msg, wParam, lParam);
 	}
 
+#ifndef NDEBUG
+#include <conio.h>
+#endif
+// Represents an error in a call to a Win32 API.
+class win32_error : public std::runtime_error
+	{
+	public:
+		win32_error(const char* msg, DWORD error)
+			: std::runtime_error(msg)
+			, _error(error)
+			{}
+
+		DWORD error() const
+			{
+			return _error;
+			}
+
+	private:
+		DWORD _error;
+	};
+
+
+// Returns the full path of current EXE
+std::wstring GetPathOfExe()
+	{
+	// Get filename with full path for current process EXE
+	wchar_t filename[MAX_PATH];
+	DWORD result = ::GetModuleFileName(
+		nullptr,    // retrieve path of current process .EXE
+		filename,
+		_countof(filename)
+	);
+	if (result == 0)
+		{
+		// Error
+		const DWORD error = ::GetLastError();
+		throw win32_error("Error in getting module filename.",
+			error);
+		}
+
+	return filename;
+	}
+
+void pause()
+	{
+#ifndef NDEBUG
+	std::cout << "Press any key to continue . . . "; _getch();
+#endif
+	}
+
 int main(int argc, char** argv)
 	{
 	std::vector<std::string> args; args.reserve(argc);
 	for (int i = 0; i < argc; i++) { args.emplace_back(argv[i]); }
 
-	if (args.size() < 2) { std::cerr << "Open with at least one image selected." << std::endl; return 0; }
-	if (!font.loadFromFile("consola.ttf")) { std::cerr << "Default font not found." << std::endl; return 0; }
+#ifndef NDEBUG
+	for (const auto& arg : args) { std::cout << "\"" << arg << "\"\n"; }
+	std::cout << "________________________________________" << std::endl;
+	pause();
+#endif
+
+	if (true)
+		{
+		std::wstring this_path_str{GetPathOfExe()};
+		std::filesystem::path this_path{this_path_str};
+		this_path = this_path.parent_path();
+
+		if (args.size() < 2)    { std::cerr << "Open with at least one image selected." << std::endl; pause(); return 0; }
+		if (!font.loadFromFile(this_path.string() + "/consola.ttf")) { std::cerr << "Default font not found." << std::endl; pause(); return 0; }
+		}
 
 	std::vector<std::filesystem::path> paths; 
 	size_t first_index{0};
 
 	std::filesystem::path first{args[1]};
-	if (!first.has_extension()) { std::cerr << "Expected an image. Supported formats: .bmp, .dds, .jpg, .png, .tga, .psd, .gif." << std::endl; return 0; }
+	if (!first.has_extension()) { std::cerr << "Expected an image. Supported formats: .bmp, .dds, .jpg, .png, .tga, .psd, .gif." << std::endl; pause(); return 0; }
 	const auto extension = first.extension().string();
 	if (extension != ".bmp" && extension != ".dds" && extension != ".jpg" && extension != ".png" && extension != ".tga" && extension != ".psd" && extension != ".gif")
 		{
-		std::cerr << "Expected an image. Supported formats: .bmp, .dds, .jpg, .png, .tga, .psd, .gif." << std::endl; return 0;
+		std::cerr << "Expected an image. Supported formats: .bmp, .dds, .jpg, .png, .tga, .psd, .gif." << std::endl; pause(); return 0;
 		}
 
 	// If there are multiple images, show all of them. If there is only one and it has no parent path, show only that.
