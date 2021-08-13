@@ -201,7 +201,15 @@ class Window
 
 			draw();
 			}
-		void on_mouse_pressed(sf::Event::MouseButtonEvent e) { dragging = true; mouse_pos = get_mouse_pos(e.x, e.y); }
+		void on_mouse_pressed(sf::Event::MouseButtonEvent e) 
+			{
+			switch (e.button)
+				{
+				case sf::Mouse::Button::Left:
+				case sf::Mouse::Button::Middle:
+				case sf::Mouse::Button::Right: dragging = true; mouse_pos = get_mouse_pos(e.x, e.y); break;
+				}
+			}
 		void on_mouse_moved(sf::Event::MouseMoveEvent e)
 			{
 			if (!dragging) { return; }
@@ -219,7 +227,18 @@ class Window
 
 			draw();
 			}
-		void on_mouse_released(sf::Event::MouseButtonEvent e) { dragging = false; }
+		void on_mouse_released(sf::Event::MouseButtonEvent e) 
+			{
+			switch (e.button)
+				{
+				case sf::Mouse::Button::Left:
+				case sf::Mouse::Button::Middle:
+				case sf::Mouse::Button::Right: dragging = false; break;
+				case sf::Mouse::XButton1: validate_index(current_index--); load(current_index); break;
+				case sf::Mouse::XButton2: validate_index(current_index++); load(current_index); break;
+				}
+			
+			}
 
 
 		// ======================================= UTILITY ======================================= 
