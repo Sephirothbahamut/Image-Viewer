@@ -134,7 +134,7 @@ class main_class
 				{
 				if (ImGui::BeginTabItem("Files browser"))
 					{
-					tree_view.draw(files_manager, selector_handle);
+					tree_view.draw(files_manager, selector_handle, window);
 
 					ImGui::EndTabItem();
 					}
@@ -267,7 +267,7 @@ int main(int argc, const char* argv[])
 		/**
 		::paths
 		/*/
-		strings_to_paths<char>(args)
+		strings_to_paths<char>(args.size() > 0 ? std::span{args.begin() + 1, args.end()} : std::span<std::basic_string_view<char>>{})
 		//*/
 		};
 	

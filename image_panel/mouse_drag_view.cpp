@@ -99,18 +99,28 @@ namespace image_panel
 			{
 			const auto mouse_position_in_world{render_target.mapPixelToCoords(event.position)};
 			const auto delta{dragging->starting_position_mouse - mouse_position_in_world};
+			if ((delta.x == 0.f) || (delta.y == 0.f)) { return; }
+
 			view.move(delta);
 			render_target.setView(view);
 			const auto updated_mouse_position_in_world{render_target.mapPixelToCoords(event.position)};
 			dragging->starting_position_mouse = updated_mouse_position_in_world;
+			dragging->moved_at_least_one_pixel = true;
 			enforce_bounds(render_target);
 			}
 		}
 
-	void mouse_drag_view::on_mouse_released(bool enable_left, const sf::Event::MouseButtonReleased& event) noexcept
+	void mouse_drag_view::on_mouse_released(bool enable_left, const sf::Event::MouseButtonReleased& event, sf::RenderTarget& render_target, const image_visualizer& image_visualizer) noexcept
 		{
-		if ((event.button == sf::Mouse::Button::Right) || (enable_left && (event.button == sf::Mouse::Button::Left)))
+		const bool left {enable_left && (event.button == sf::Mouse::Button::Left )};
+		const bool right{                event.button == sf::Mouse::Button::Right };
+		if (left || right)
 			{
+			const auto mouse_position_in_world{render_target.mapPixelToCoords(event.position)};
+			if (dragging && enable_left && right && !dragging->moved_at_least_one_pixel)
+				{
+				change_zoom_to_fit_major(static_cast<sf::Vector2f>(image_visualizer.current_image_size()), render_target);
+				}
 			dragging = std::nullopt;
 			}
 		}
@@ -145,7 +155,7 @@ namespace image_panel
 			on_resize(event, render_target);
 			});
 		}
-	bool mouse_drag_view::process_mouse_events(bool enable_left, const sf::Event& event, sf::RenderTarget& render_target) noexcept
+	bool mouse_drag_view::process_mouse_events(bool enable_left, const sf::Event& event, sf::RenderTarget& render_target, const image_visualizer& image_visualizer) noexcept
 		{
 		process_event<sf::Event::MouseWheelScrolled>(event, [&](const sf::Event::MouseWheelScrolled& event)
 			{
@@ -161,7 +171,7 @@ namespace image_panel
 			});
 		process_event<sf::Event::MouseButtonReleased>(event, [&](const sf::Event::MouseButtonReleased& event)
 			{
-			on_mouse_released(enable_left, event);
+			on_mouse_released(enable_left, event, render_target, image_visualizer);
 			});
 		return is_mouse_captured();
 		}

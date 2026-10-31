@@ -14,9 +14,11 @@ namespace image_panel
 			struct drag_metadata
 				{
 				sf::Vector2f starting_position_mouse;
+				bool moved_at_least_one_pixel{false};
 				};
 
 			std::optional<drag_metadata> dragging;
+			
 			sf::View view;
 
 			sf::Vector2f bounds{std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
@@ -50,14 +52,14 @@ namespace image_panel
 
 			void on_mouse_moved(const sf::Event::MouseMoved& event, sf::RenderTarget& render_target) noexcept;
 
-			void on_mouse_released(bool enable_left, const sf::Event::MouseButtonReleased& event) noexcept;
+			void on_mouse_released(bool enable_left, const sf::Event::MouseButtonReleased& event, sf::RenderTarget& render_target, const image_visualizer& image_visualizer) noexcept;
 
 			void on_mouse_scroll_wheel(const sf::Event::MouseWheelScrolled& event, sf::RenderTarget& render_target) noexcept;
 
 			void process_events_not_requiring_capture(const sf::Event& event, sf::RenderTarget& render_target) noexcept;
 			
 			/// <returns>True if mouse has been captured.</returns>
-			bool process_mouse_events   (bool enable_left, const sf::Event& event, sf::RenderTarget& render_target) noexcept;
+			bool process_mouse_events   (bool enable_left, const sf::Event& event, sf::RenderTarget& render_target, const image_visualizer& image_visualizer) noexcept;
 			bool process_keyboard_events(const sf::Event& event, sf::RenderTarget& render_target, const image_visualizer& image_visualizer) noexcept;
 
 			void change_zoom_to_exact_pixel(const sf::Vector2f& target_size, sf::RenderTarget& render_target) noexcept;

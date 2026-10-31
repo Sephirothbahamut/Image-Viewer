@@ -53,7 +53,7 @@ namespace image_panel
 	bool image_panel::process_mouse_events(const sf::Event& event, sf::RenderTarget& render_target, files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept
 		{
 		bool captured{cropper.process_mouse_events(event, render_target, image_visualizer.current_image_size())};
-		captured |= mouse_drag_view.process_mouse_events(!captured, event, render_target);
+		captured |= mouse_drag_view.process_mouse_events(!captured, event, render_target, image_visualizer);
 
 		if (!captured)
 			{
