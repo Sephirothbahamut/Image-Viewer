@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\glad">
+      <UniqueIdentifier>{166bc160-ee23-4715-a651-ed0a1505185c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui">
+      <UniqueIdentifier>{94c5c36e-9691-4509-802a-43c9b06de876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image_panel">
+      <UniqueIdentifier>{f799b063-328c-4304-8737-2de77df4e4a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{5db59439-3cb1-43ab-8afe-856cf051f40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image_formats">
+      <UniqueIdentifier>{7ea13b60-f27e-4a79-a86d-b6ba14cae6f5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gui\tree_view.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\viewport.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\cropper.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\root.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\image_visualizer.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\mouse_drag_view.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\cropper.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\image_panel.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+    <ClCompile Include="files_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="global.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils_implementation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\cropper_create_output.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+    <ClCompile Include="image_formats\webp.cpp">
+      <Filter>Source Files\image_formats</Filter>
+    </ClCompile>
+    <ClCompile Include="image_panel\cropper_save_load_templates.cpp">
+      <Filter>Source Files\image_panel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gui\tree_view.h">
+      <Filter>Source Files\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\viewport.h">
+      <Filter>Source Files\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\cropper.h">
+      <Filter>Source Files\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\root.h">
+      <Filter>Source Files\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="image_panel\image_panel.h">
+      <Filter>Source Files\image_panel</Filter>
+    </ClInclude>
+    <ClInclude Include="image_panel\image_visualizer.h">
+      <Filter>Source Files\image_panel</Filter>
+    </ClInclude>
+    <ClInclude Include="image_panel\mouse_drag_view.h">
+      <Filter>Source Files\image_panel</Filter>
+    </ClInclude>
+    <ClInclude Include="image_panel\cropper.h">
+      <Filter>Source Files\image_panel</Filter>
+    </ClInclude>
+    <ClInclude Include="files_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="forkawesome.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="process_event.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="image_formats\webp.h">
+      <Filter>Source Files\image_formats</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CinLibName)d.lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CinLibName).lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CioLibName)d.lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CioLibName).lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CucLibName)d.lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CucLibName).lib" />
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CdtLibName).lib" />
+  </ItemGroup>
+</Project>

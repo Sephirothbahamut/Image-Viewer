@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="screenshots_cutter.vcxproj" Id="6bd3533c-8faa-46e1-98c8-8712bfa9b45c" />
+</Solution>
