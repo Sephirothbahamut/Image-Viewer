@@ -11,4 +11,5 @@ auto process_event(const sf::Event& event, const callback_t& callback)
 		const T& instance{*instance_opt};
 		return callback(instance);
 		}
+	//return decltype(callback(instance)){};
 	}

@@ -12,6 +12,9 @@
 #include "../global.h"
 #include "../forkawesome.h"
 
+#include "get_open_filename.h"
+
+
 namespace gui
 	{	
 	struct table_row_background_colour_ret_t
@@ -95,12 +98,12 @@ namespace gui
 			ImGui::TableSetColumnIndex(0);
 			if (ImGui::TreeNodeEx(std::addressof(node), flags, string.c_str()))
 				{
-				if constexpr (root) { draw_root_delete(node); }
-
 				if (ImGui::IsItemClicked() || (ImGui::IsItemFocused() && (ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_Space))))
 					{
 					selector_handle->set_or_keep_current(node);
 					}
+				
+				if constexpr (root) { draw_root_delete(node); }
 
 				for (const auto& child : node.children())
 					{
@@ -143,26 +146,22 @@ namespace gui
 			}
 		}
 
-	void tree_view::draw_add_line(files_manager::with_selectors& files_manager) noexcept
+	void tree_view::draw_add_line(files_manager::with_selectors& files_manager, const sf::Window& parent_window) noexcept
 		{
 		if (ImGui::BeginTable("table_add", 3, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_BordersOuterH))
 			{
-			ImGui::TableSetupColumn("##add_column_a", ImGuiTableColumnFlags_None);
-			ImGui::TableSetupColumn("##add_column_b", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthStretch);
-			ImGui::TableSetupColumn("##add_column_c", ImGuiTableColumnFlags_None);
+			ImGui::TableSetupColumn("##add_column_a", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthStretch);
+			ImGui::TableSetupColumn("##add_column_b", ImGuiTableColumnFlags_None);
 
 			ImGui::TableNextRow();
+
 			ImGui::TableSetColumnIndex(0);
-			if (ImGui::Button((std::string(::forkawesome::folder_o) + "##btn browse files").c_str()))
-				{
-				//TODO GetOpenFileName
-				logger.wrn("Unimplemented");
-				}
-			ImGui::TableSetColumnIndex(1);
 			ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-			ImGui::InputText("##Add root path", std::addressof(gui_add_element_path));
+			
+			ImGui::InputText("##Add root path", std::addressof(gui_add_element_path) );
 			ImGui::PopItemWidth();
-			ImGui::TableSetColumnIndex(2);
+
+			ImGui::TableSetColumnIndex(1);
 			if (ImGui::Button((std::string(::forkawesome::plus_square_o) + "##btn add files").c_str()))
 				{
 				files_manager.load(gui_add_element_path, gui_load_subfolders);
@@ -170,9 +169,28 @@ namespace gui
 
 			ImGui::EndTable();
 			}
+
+		const auto button_width{ImGui::GetContentRegionAvail().x / 2.f};
+		if (ImGui::Button("Add file", ImVec2{button_width, 0.f}))
+			{
+			if (const auto selected_opt{user_selected_files(parent_window)})
+				{
+				const auto& selected{*selected_opt};
+				files_manager.load(std::span{selected.begin(), selected.end()}, gui_load_subfolders);
+				}
+			}
+		ImGui::SameLine();
+		if (ImGui::Button("Add directory", ImVec2{button_width, 0.f}))
+			{
+			if (const auto selected_opt{user_selected_directories(parent_window)})
+				{
+				const auto& selected{*selected_opt};
+				files_manager.load(std::span{selected.begin(), selected.end()}, gui_load_subfolders);
+				}
+			}
 		}
 
-	void tree_view::draw_tree_block(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept
+	void tree_view::draw_tree_block(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle, const sf::Window& parent_window) noexcept
 		{
 		ImGui::BeginChild("Tree block", ImVec2(0, 260), ImGuiChildFlags_ResizeY, ImGuiWindowFlags_None);
 	
@@ -196,7 +214,7 @@ namespace gui
 			gui_to_delete = nullptr;
 			}
 
-		draw_add_line(files_manager);
+		draw_add_line(files_manager, parent_window);
 		}
 
 	bool tree_view::get_gui_load_subfolders() const noexcept
@@ -204,11 +222,11 @@ namespace gui
 		return gui_load_subfolders;
 		}
 
-	void tree_view::draw(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept
+	void tree_view::draw(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle, const sf::Window& parent_window) noexcept
 		{
 		ImGui::PushID(123);
 
-		draw_tree_block(files_manager, selector_handle);
+		draw_tree_block(files_manager, selector_handle, parent_window);
 
 		if (ImGui::Checkbox("Load subfolders", std::addressof(gui_load_subfolders)))
 			{

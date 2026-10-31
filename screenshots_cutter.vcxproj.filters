@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\glad">
-      <UniqueIdentifier>{166bc160-ee23-4715-a651-ed0a1505185c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\gui">
       <UniqueIdentifier>{94c5c36e-9691-4509-802a-43c9b06de876}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,9 @@
     <ClCompile Include="image_panel\cropper_save_load_templates.cpp">
       <Filter>Source Files\image_panel</Filter>
     </ClCompile>
+    <ClCompile Include="gui\get_open_filename.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gui\tree_view.h">
@@ -115,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="image_formats\webp.h">
       <Filter>Source Files\image_formats</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\get_open_filename.h">
+      <Filter>Source Files\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

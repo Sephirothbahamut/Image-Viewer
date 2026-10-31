@@ -2,6 +2,8 @@
 
 #include <limits>
 
+#include <SFML/Window.hpp>
+
 #include <utils/memory.h>
 
 #include "../files_manager.h"
@@ -22,12 +24,12 @@ namespace gui
 			void draw_node(const files_manager::node& node, files_manager::selector::handle& selector_handle) noexcept;
 
 			void draw_tree_nodes(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept;
-			void draw_add_line  (files_manager::with_selectors& files_manager) noexcept;
-			void draw_tree_block(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept;
+			void draw_add_line  (files_manager::with_selectors& files_manager, const sf::Window& parent_window) noexcept;
+			void draw_tree_block(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle, const sf::Window& parent_window) noexcept;
 
 		public:
 			bool get_gui_load_subfolders() const noexcept;
 
-			void draw(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle) noexcept;
+			void draw(files_manager::with_selectors& files_manager, files_manager::selector::handle& selector_handle, const sf::Window& parent_window) noexcept;
 		};
 	}
