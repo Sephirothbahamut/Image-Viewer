@@ -108,9 +108,11 @@ namespace files_manager
 		{
 		if (!parent_obs()) { return nullptr; }
 		const auto& parent{*parent_obs()};
-		if (parent.relative_path().empty()) { return parent_obs(); }
+		if (parent.relative_path().empty()) { return this; }
 		return parent.root_obs();
 		}
+
+	bool                              node::is_root() const noexcept { return root_obs() == this; }
 
 
 	std::filesystem::path node::full_path() const noexcept
@@ -453,13 +455,16 @@ namespace files_manager
 			auto& selected_obs{selector.selected_obs};
 			if (!selector.selected_obs) { continue; }
 			const auto& selected{*selector.selected_obs};
-			const auto* root_obs{selector.selected_obs->root_obs()};
-			const auto& root{*root_obs};
 
-			if (std::addressof(root) == std::addressof(root_to_be_removed))
+			if (const auto* root_obs{selector.selected_obs->root_obs()})
 				{
-				selector.changed = true;
-				selected_obs = root.next_excluding_children(selector.filter);
+				const auto& root{*root_obs};
+
+				if (std::addressof(root) == std::addressof(root_to_be_removed))
+					{
+					selector.changed = true;
+					selected_obs = root.next_excluding_children(selector.filter);
+					}
 				}
 			}
 

@@ -54,6 +54,7 @@ namespace files_manager
 			size_t                          index        () const noexcept;
 			utils::observer_ptr<const node> parent_obs   () const noexcept;
 			utils::observer_ptr<const node> root_obs     () const noexcept;
+			bool                            is_root      () const noexcept;
 			std::filesystem::path           relative_path() const noexcept;
 			meta_type_t                     meta_type    () const noexcept;
 
