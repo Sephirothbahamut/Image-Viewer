@@ -22,7 +22,8 @@ bool check_is_file_type_supported(const std::filesystem::path& path)
 		|| as_string == ".jpg"
 		|| as_string == ".jpeg"
 		|| as_string == ".tga"
-		|| as_string == ".psd";
+		|| as_string == ".psd"
+		|| as_string == ".webp";
 	}
 
 namespace files_manager

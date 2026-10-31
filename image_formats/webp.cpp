@@ -1,5 +1,6 @@
 #include "webp.h"
 
+#include <ranges>
 #include <fstream>
 
 #include <webp/encode.h>
@@ -78,8 +79,73 @@ namespace image_formats
 		return {};
 		};
 
-	/*std::expected<sf::Image, std::string> load_webp(const std::filesystem::path& filepath) noexcept
-		{
 
-		}*/
+	struct c_webp_image_wrapper
+		{
+		public:
+			uint8_t* rgba_buffer{nullptr};
+			int      width      {0      };
+			int      height     {0      };
+
+			operator bool() const noexcept { return rgba_buffer; }
+
+			static c_webp_image_wrapper create(const std::span<uint8_t> encoded_buffer) noexcept
+				{
+				uint8_t* rgba_buffer{nullptr};
+				int width;
+				int height;
+
+				rgba_buffer = WebPDecodeRGBA(encoded_buffer.data(), encoded_buffer.size(), std::addressof(width), std::addressof(height));
+
+				return c_webp_image_wrapper{rgba_buffer, width, height};
+				}
+
+			~c_webp_image_wrapper()
+				{
+				if (rgba_buffer)
+					{
+					WebPFree(rgba_buffer);
+					}
+				}
+
+			c_webp_image_wrapper           (const c_webp_image_wrapper&  copy) = delete;
+			c_webp_image_wrapper& operator=(const c_webp_image_wrapper&  copy) = delete;
+			c_webp_image_wrapper           (      c_webp_image_wrapper&& move) = delete;
+			c_webp_image_wrapper& operator=(      c_webp_image_wrapper&& move) = delete;
+
+		private:
+			c_webp_image_wrapper(uint8_t* rgba_buffer, int width, int height) noexcept :
+				rgba_buffer{rgba_buffer},
+				width      {width      },
+				height     {height     }
+				{}
+		};
+
+	std::expected<sf::Image, std::string> load_webp(const std::filesystem::path& filepath) noexcept
+		{
+		std::ifstream file(filepath, std::ios::binary | std::ios::ate);
+		if (!file.is_open()) 
+			{
+			return std::unexpected("Failed to open file: \"" + filepath.string() + "\"");
+			}
+
+		const std::streamsize size{file.tellg()};
+		file.seekg(0, std::ios::beg);
+
+		std::vector<uint8_t> encoded_buffer(size);
+		if (!file.read(reinterpret_cast<char*>(encoded_buffer.data()), size))
+			{
+			return std::unexpected("Failed to read file: \"" + filepath.string() + "\"");
+			}
+
+		c_webp_image_wrapper c_webp_image_wrapper{c_webp_image_wrapper::create(encoded_buffer)};
+		if (!c_webp_image_wrapper)
+			{
+			return std::unexpected("Failed to decode webp image: \"" + filepath.string() + "\"");
+			}
+
+		sf::Image sf_image;
+		sf_image.resize(sf::Vector2u{static_cast<unsigned>(c_webp_image_wrapper.width), static_cast<unsigned>(c_webp_image_wrapper.height)}, c_webp_image_wrapper.rgba_buffer);
+		return sf_image;
+		}
 	}

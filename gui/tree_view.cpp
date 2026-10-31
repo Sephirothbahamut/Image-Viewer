@@ -97,7 +97,7 @@ namespace gui
 				{
 				if constexpr (root) { draw_root_delete(node); }
 
-				if (ImGui::IsItemClicked())
+				if (ImGui::IsItemClicked() || (ImGui::IsItemFocused() && (ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_Space))))
 					{
 					selector_handle->set_or_keep_current(node);
 					}

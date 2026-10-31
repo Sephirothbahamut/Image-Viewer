@@ -1,6 +1,7 @@
 #include "image_visualizer.h"
 
 #include "../process_event.h"
+#include "../image_formats/webp.h"
 #include <utils/string.h>
 
 namespace image_panel
@@ -30,12 +31,23 @@ namespace image_panel
 
 	bool image_visualizer::try_load(const std::filesystem::path& path)
 		{
-		sf::Image loaded;
-		if (loaded.loadFromFile(path) && texture.loadFromImage(loaded))
+		sf::Image new_image;
+		bool loaded{new_image.loadFromFile(path)};
+		if (!loaded)
+			{
+			const auto expected_image{image_formats::load_webp(path)};
+			if (expected_image)
+				{
+				new_image = std::move(*expected_image);
+				loaded = true;
+				}
+			}
+
+		if (loaded && texture.loadFromImage(new_image))
 			{
 			logger.suc("Loaded image \"" + path.string() + "\".");
 			set_error_message();
-			image = loaded;
+			image = new_image;
 			texture.setSmooth(smoothing);
 			sprite = sf::Sprite{texture};
 			_current_path = path;
